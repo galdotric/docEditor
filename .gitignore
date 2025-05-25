@@ -1,0 +1,4 @@
+obj/
+server
+client
+*.o
