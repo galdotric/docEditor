@@ -1,14 +1,12 @@
-// In markdown.c
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h> 
-#include <ctype.h> // For isdigit
+#include <ctype.h>
 
-#include "markdown.h" // This should include document.h
+#include "markdown.h"
 
-// Error Codes (should ideally be solely in markdown.h)
+// Return codes
 #ifndef SUCCESS
 #define SUCCESS 0
 #endif
@@ -33,7 +31,6 @@ static char get_char_at_abs_pos(document *doc, size_t abs_pos);
 
 
 // === Helper Functions ===
-// This is a static helper function. Its declaration should NOT be in markdown.h.
 static chunk *create_chunk(const char *text, size_t len) {
     chunk *new_chunk = (chunk *)malloc(sizeof(chunk));
     if (!new_chunk) {
@@ -98,7 +95,6 @@ void markdown_free(document *doc) {
 
 static size_t adjust_pos_for_deletions(document *doc, size_t original_pos) {
     size_t adjusted_pos = original_pos;
-    // and deletion_record_for_version_t must be defined.
     for (int i = 0; i < doc->num_active_deletions; ++i) {
         deletion_record_for_version_t *del = &doc->active_deletions[i];
         if (original_pos >= del->original_start && original_pos < del->original_start + del->original_len) {
@@ -212,7 +208,7 @@ int markdown_delete(document *doc, uint64_t version, size_t pos, size_t len) {
         }
     }
     
-    // Ensure MAX_DELETIONS_IN_VERSION is defined in document.h
+    // Remember the deletion so later commands in this version can map positions inside it
     if (doc->num_active_deletions < MAX_DELETIONS_IN_VERSION) {
         doc->active_deletions[doc->num_active_deletions].original_start = pos; 
         doc->active_deletions[doc->num_active_deletions].original_len = len;   
@@ -264,7 +260,7 @@ static char get_char_at_abs_pos(document *doc, size_t abs_pos) {
     return '\0'; 
 }
 
-// Revised helper to find the number of the last OL item ending at or before `position_before`
+// Number of the ordered-list item on the line ending just before `position_before`, or 0
 static int get_last_ol_number_ending_before(document *doc, size_t position_before) {
     if (position_before == 0) return 0;
 

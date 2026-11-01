@@ -1,4 +1,13 @@
+# Build output
 obj/
 server
 client
 *.o
+
+# Created at run time
+doc.md
+FIFO_C2S_*
+FIFO_S2C_*
+
+# Editors
+.vscode/

@@ -2,12 +2,15 @@
 #define MARKDOWN_H
 #include <stdio.h>
 #include <stdint.h>
-#include "document.h"  
-/**
- * The given file contains all the functions you will be required to complete. You are free to and encouraged to create
- * more helper functions to help assist you when creating the document. For the automated marking you can expect unit tests
- * for the following tests, verifying if the document functionalities are correctly implemented. All the commands are explained 
- * in detail in the assignment spec.
+#include "document.h"
+/*
+ * The document model and every editing command.
+ *
+ * Every command takes the version it was issued against and returns
+ * 0 on success, -1 for an invalid position or -3 for an outdated version.
+ * A position inside text deleted earlier in the same version is moved to
+ * the start of that deletion. Edits change the live text;
+ * markdown_increment_version() makes them visible to readers.
  */
 
 // Return -1 if the cursor position is invalid
